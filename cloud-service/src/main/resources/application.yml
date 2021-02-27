@@ -1,0 +1,94 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: cloud-service
+  sleuth:
+    sampler:
+      # 抽样采集数据比例,默认0.1
+      probability: 1.0
+  zipkin:
+    sender:
+      # 使用rabbit进行发送消息
+      type: rabbit
+#    base-url: http://120.76.175.67:9411
+  rabbitmq:
+    host: 120.76.175.67
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+eureka:
+  client:
+    # 开启健康检查需要依赖spring-boot-starter-actuator
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://root:root@localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: false
+    # 等待下一次心跳的超时时间,若在这个时间内没有收到心跳,则移除该instance
+    lease-expiration-duration-in-seconds: 5
+    # 发送心跳的频率
+    lease-renewal-interval-in-seconds: 5
+
+feign:
+  # 禁用httpClient
+  httpclient:
+    enabled: false
+  # 启用okhttp
+  okhttp:
+    enabled: true
+  # 启用GZIP压缩数据 只有当Feign的HttpClient不是okHttp3的时候才起效
+  compression:
+    request:
+      enabled: true
+      # 压缩类型
+      mime-types: text/xml,application/xml,application/json
+      # 最小压缩标准
+      min-request-size: 2048
+    response:
+      enabled: true
+  # 开启Feign对Hystrix的支持
+  hystrix:
+    enabled: true
+#  client:
+#    # 通过配置文件配置指定Feign配置
+#    config:
+#      feignName:
+#        # 读取超时时间
+#        readTimeout: 5000
+#        # 链接超时时间
+#        connectTimeout: 5000
+#        # 日志等级
+#        loggerLevel: full
+#        # 重试
+#        retryer: com.example.SimpleRetyer
+#        # 拦截器
+#        requestInterceptors:
+#        - com.example.FooRequestInterceptor
+#        - com.example.BarRequestInterceptor
+#        # 编码器
+#        encoder: com.example.SimpleEncoder
+#        # 解码器
+#        decoder: com.example.SimpleDecoder
+#        # 契约
+#        contract: com.example.SimpleContract
+
+logging:
+  level:
+    # FeignClient的日志级别,格式"logging.level.client类地址=级别"
+    pers:
+      quan:
+        cloud:
+          remote:
+            RemoteClient: debug

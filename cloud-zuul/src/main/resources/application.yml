@@ -1,0 +1,53 @@
+server:
+  port: 2103
+
+spring:
+  application:
+    name: cloud-zuul
+
+# Eureka配置
+eureka:
+  client:
+    # 开启健康检查需要依赖spring-boot-starter-actuator
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://root:root@localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: true
+    # 等待下一次心跳的超时时间,若在这个时间内没有收到心跳,则移除该instance
+    lease-expiration-duration-in-seconds: 5
+    # 发送心跳的频率
+    lease-renewal-interval-in-seconds: 5
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: *
+
+# Zuul配置
+zuul:
+  include-debug-header: true
+# 统一请求前缀
+#  prefix: /zuul
+# 默认/zuul 解决需要统一前缀时不生效问题
+#  servlet-path: /
+  routes:
+    service:
+    path: /service/**
+    url: http://localhost:8080/
+#    url: forward:/local # 路由到本地
+#  禁用过滤器方式:zuul.ClassName.过滤器类型.disable=true
+#  IpFilter:
+#    pre:
+#      disable: true
+  retryable: true
+ribbon:
+  ConnectTimeout: 1000
+  ReadTimeout: 1000
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 3
+  OkToRetryOnAllOperations: true
+  retryableStatusCodes: 500,404,502

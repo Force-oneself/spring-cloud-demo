@@ -1,0 +1,35 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: cloud-sleuth
+  sleuth:
+    sampler:
+      # 抽样采集数据比例,默认0.1
+      probability: 1.0
+  zipkin:
+    # 使用rabbit进行发送消息
+    type: rabbit
+  #    base-url: http://120.76.175.67:9411
+  rabbitmq:
+    host: 120.76.175.67
+    port: 5672
+    username: guest
+    password: guest
+    virtualHost: /
+
+eureka:
+  client:
+    # 开启健康检查需要依赖spring-boot-starter-actuator
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://root:root@localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: false
+    # 等待下一次心跳的超时时间,若在这个时间内没有收到心跳,则移除该instance
+    lease-expiration-duration-in-seconds: 5
+    # 发送心跳的频率
+    lease-renewal-interval-in-seconds: 5

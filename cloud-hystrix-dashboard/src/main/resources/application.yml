@@ -1,0 +1,33 @@
+server:
+  port: 9011
+
+spring:
+  application:
+    name: cloud-hystrix-dashboard
+
+turbine:
+  # 配置需要聚合的服务名称
+  app-config: cloud-service
+  aggregator:
+    # 需要聚合的集群名称
+    cluster-config: default
+  # 集群名表达式
+  cluster-name-expression: new String("default")
+  # sub用于监控服务的context-path,此方式是全局配置
+  # turbine.instanceUtlSuffix.集群名称=/sub/hystrix.stream
+#  instanceUtlSuffix: /sub/hystrix.stream
+
+eureka:
+  client:
+    # 开启健康检查需要依赖spring-boot-starter-actuator
+    healthcheck:
+    enabled: true
+    serviceUrl:
+    defaultZone: http://root:root@localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: false
+    # 等待下一次心跳的超时时间,若在这个时间内没有收到心跳,则移除该instance
+    lease-expiration-duration-in-seconds: 5
+  # 发送心跳的频率
+  lease-renewal-interval-in-seconds: 5

@@ -1,0 +1,24 @@
+server:
+  port: 2103
+
+spring:
+  application:
+    name: cloud-auth-jwt
+
+zuul:
+  sensitive-headers: Cookie,Set-Cookie
+
+eureka:
+  client:
+    # 开启健康检查需要依赖spring-boot-starter-actuator
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://root:root@localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: false
+    # 等待下一次心跳的超时时间,若在这个时间内没有收到心跳,则移除该instance
+    lease-expiration-duration-in-seconds: 5
+    # 发送心跳的频率
+    lease-renewal-interval-in-seconds: 5
