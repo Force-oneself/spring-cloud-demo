@@ -1,4 +1,4 @@
-package pers.quan.cloud.remote;
+package pers.quan.cloud.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

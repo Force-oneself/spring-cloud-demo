@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
-import pers.quan.cloud.base.ResponseCode;
-import pers.quan.cloud.base.ResponseData;
+import pers.quan.cloud.common.bean.ResponseCode;
+import pers.quan.cloud.common.bean.ResponseData;
 import pers.quan.cloud.util.JsonUtils;
 
 @Component

@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pers.quan.cloud.common.bean.ResponseData;
-import pers.quan.cloud.remote.AuthQuery;
-import pers.quan.cloud.remote.AuthRemoteClient;
+import pers.quan.cloud.feign.AuthQuery;
+import pers.quan.cloud.feign.AuthRemoteClient;
 
 /**
  * 定时刷新token

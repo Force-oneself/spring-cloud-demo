@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import pers.quan.cloud.base.ResponseCode;
-import pers.quan.cloud.base.ResponseData;
+import pers.quan.cloud.common.bean.ResponseCode;
+import pers.quan.cloud.common.bean.ResponseData;
 import pers.quan.cloud.util.IpUtils;
 import pers.quan.cloud.util.JsonUtils;
 
