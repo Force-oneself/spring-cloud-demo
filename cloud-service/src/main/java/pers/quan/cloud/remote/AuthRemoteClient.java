@@ -21,5 +21,4 @@ public interface AuthRemoteClient {
    */ 
    @PostMapping("/token")
    ResponseData auth(@RequestBody AuthQuery query);
-   
 }

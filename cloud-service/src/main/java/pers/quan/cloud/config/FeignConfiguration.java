@@ -51,7 +51,7 @@ public class FeignConfiguration {
      *
      * @return basic认证
      */
-    @Bean
+//    @Bean
     public BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
         return new BasicAuthRequestInterceptor("user", "password");
     }

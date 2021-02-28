@@ -3,11 +3,11 @@ package pers.quan.cloud.config;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 import pers.quan.cloud.common.filter.HttpBasicAuthorizeFilter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * @Description:
  * @Author heyq

@@ -34,7 +34,7 @@ public class AuthHeaderFilter extends ZuulFilter {
 	@Override
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
-		ctx.addZuulRequestHeader("Authorization", System.getProperty("fangjia.auth.token"));
+		ctx.addZuulRequestHeader("authorization", System.getProperty("fangjia.auth.token"));
 		return null;
 	}
 }

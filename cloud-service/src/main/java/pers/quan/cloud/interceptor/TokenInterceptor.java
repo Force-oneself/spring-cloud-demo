@@ -22,7 +22,7 @@ public class TokenInterceptor implements ClientHttpRequestInterceptor {
 			throws IOException {
 		System.err.println("进入RestTemplate拦截器");
 		HttpHeaders headers = request.getHeaders();
-	    headers.add("Authorization", System.getProperty("fangjia.auth.token"));
+	    headers.add("authorization", System.getProperty("fangjia.auth.token"));
 	    return execution.execute(request, body);
 	}
 

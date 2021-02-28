@@ -37,9 +37,9 @@ public class HttpBasicAuthorizeFilter implements Filter {
 		HttpServletResponse httpResponse = (HttpServletResponse) response;  
         httpResponse.setCharacterEncoding("UTF-8");    
         httpResponse.setContentType("application/json; charset=utf-8"); 
-        String auth = httpRequest.getHeader("Authorization");
+        String auth = httpRequest.getHeader("authorization");
         //验证TOKEN
-		if (!"".equals(auth)) {
+		if (!(auth != null && !auth.isEmpty())) {
 			PrintWriter print = httpResponse.getWriter();
 			print.write(JsonUtils.toJson(ResponseData.fail("非法请求【缺少Authorization信息】", ResponseCode.NO_AUTH_CODE.getCode())));
 			return;
