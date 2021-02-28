@@ -8,6 +8,27 @@ spring:
     user:
       name: root
       password: root
+  # Spring Boot admin 配置
+  boot:
+    admin:
+      notify:
+        mail:
+          # 发送给谁
+          to: 1044749290@qq.com
+          # 是谁发送出去的
+          from: 228964796@qq.com
+  # 邮箱设置
+  mail:
+    host: smtp.qq.com
+    username: 228964796@qq.com
+    password: ENC(trMFdleqQX20lWwDF1lMFOKZ1JDSNJMRpdk0AiSodgQ=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 management:
   endpoints:
@@ -29,4 +50,11 @@ eureka:
     lease-expiration-duration-in-seconds: 5
     # 发送心跳的频率
     lease-renewal-interval-in-seconds: 5
-    status-page-url: http://${spring.cloud.ip-address}:${server.port}
+    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}
+
+jasypt:
+  encryptor:
+    password: quan.qq.mail
+    # 加密算法设置 3.0.0 以后
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
