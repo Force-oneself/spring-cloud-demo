@@ -33,14 +33,14 @@ public class DebugRequestFilter extends ZuulFilter {
     
     @Override
     public Object run() {
-        HttpServletRequest req = (HttpServletRequest)RequestContext.getCurrentContext().getRequest();
+        HttpServletRequest req = RequestContext.getCurrentContext().getRequest();
         System.err.println("REQUEST:: " + req.getScheme() + " " + req.getRemoteAddr() + ":" + req.getRemotePort());
         StringBuilder params = new StringBuilder("?");
         // 获取URL参数
         Enumeration<String> names = req.getParameterNames();
         if( req.getMethod().equals("GET") ) {
            while (names.hasMoreElements()) {
-                 String name = (String) names.nextElement();
+                 String name = names.nextElement();
                  params.append(name);
                  params.append("=");
                  params.append(req.getParameter(name));
@@ -53,7 +53,7 @@ public class DebugRequestFilter extends ZuulFilter {
         System.err.println("REQUEST:: > " + req.getMethod() + " " + req.getRequestURI() + params + " " + req.getProtocol());
         Enumeration<String> headers = req.getHeaderNames();
         while (headers.hasMoreElements()) {
-            String name = (String) headers.nextElement();
+            String name = headers.nextElement();
             String value = req.getHeader(name);
             System.err.println("REQUEST:: > " + name + ":" + value);
         }

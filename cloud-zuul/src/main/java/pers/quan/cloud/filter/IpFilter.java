@@ -8,8 +8,8 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import pers.quan.cloud.common.bean.ResponseCode;
 import pers.quan.cloud.common.bean.ResponseData;
-import pers.quan.cloud.util.IpUtils;
-import pers.quan.cloud.util.JsonUtils;
+import pers.quan.cloud.common.util.IpUtils;
+import pers.quan.cloud.common.util.JsonUtils;
 
 public class IpFilter extends ZuulFilter {
 

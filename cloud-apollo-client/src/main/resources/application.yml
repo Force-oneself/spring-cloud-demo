@@ -1,15 +1,19 @@
 server:
-  port: 8083
+  port: 8084
 
 spring:
   application:
-    name: cloud-feign-service
+    name: cloud-apollo-client
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+app:
+  id: SampleApp
+apollo:
+  meta: http://localhost:8080
+  bootstrap:
+    enabled: true
+    namespaces: application
+cxytiandiName: xxx
+cxytiandiUrl: http://baidu.com
 
 eureka:
   client:
@@ -25,3 +29,5 @@ eureka:
     lease-expiration-duration-in-seconds: 5
     # 发送心跳的频率
     lease-renewal-interval-in-seconds: 5
+    app-group-name:
+    appname:

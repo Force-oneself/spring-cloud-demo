@@ -1,4 +1,4 @@
-package pers.quan.cloud.util;
+package pers.quan.cloud.common.util;
 
 import javax.servlet.http.HttpServletRequest;
 

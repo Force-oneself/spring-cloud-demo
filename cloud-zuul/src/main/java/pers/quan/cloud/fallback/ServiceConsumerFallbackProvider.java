@@ -14,7 +14,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import pers.quan.cloud.common.bean.ResponseCode;
 import pers.quan.cloud.common.bean.ResponseData;
-import pers.quan.cloud.util.JsonUtils;
+import pers.quan.cloud.common.util.JsonUtils;
 
 @Component
 public class ServiceConsumerFallbackProvider implements FallbackProvider {

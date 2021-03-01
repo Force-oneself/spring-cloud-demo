@@ -21,11 +21,9 @@ eureka:
     # 发送心跳的频率
     lease-renewal-interval-in-seconds: 5
 
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: *
+#zuul-extend-article-service:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: pers.quan.cloud.rule.GrayPushRule
 
 # Zuul配置
 zuul:
@@ -37,7 +35,7 @@ zuul:
   routes:
     service:
     path: /service/**
-    url: http://localhost:8080/
+    url: http://localhost:8082/
 #    url: forward:/local # 路由到本地
 #  禁用过滤器方式:zuul.ClassName.过滤器类型.disable=true
 #  IpFilter:
