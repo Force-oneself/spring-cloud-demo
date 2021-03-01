@@ -11,56 +11,58 @@ import pers.quan.cloud.config.CacheAutoConfiguration;
 
 @Service
 public class CacheServiceImpl implements CacheService {
-	private Logger logger = LoggerFactory.getLogger(CacheAutoConfiguration.class);
-	@Autowired
-	private StringRedisTemplate stringRedisTemplate;
 
-	private long timeout = 1L;
+    private Logger logger = LoggerFactory.getLogger(CacheAutoConfiguration.class);
 
-	private TimeUnit timeUnit = TimeUnit.HOURS;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
-	@Override
-	public void setCache(String key, String value, long timeout, TimeUnit timeUnit) {
-		try {
-			stringRedisTemplate.opsForValue().set(key, value, timeout, timeUnit);
-		} catch (Exception e) {
-			logger.error("",e);
-		}
-	}
+    private long timeout = 1L;
 
-	@Override
-	public String getCache(String key) {
-		try {
-			return stringRedisTemplate.opsForValue().get(key);
-		} catch (Exception e) {
-			logger.error("",e);
-			return null;
-		}
-	}
+    private TimeUnit timeUnit = TimeUnit.HOURS;
 
-	@Override
-	public void deleteCache(String key) {
-		stringRedisTemplate.delete(key);
-	}
+    @Override
+    public void setCache(String key, String value, long timeout, TimeUnit timeUnit) {
+        try {
+            stringRedisTemplate.opsForValue().set(key, value, timeout, timeUnit);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+    }
 
-	@Override
-	public <V, K> String getCache(K key, Closure<V, K> closure) {
-		return doGetCache(key, closure, this.timeout, this.timeUnit);
-	}
+    @Override
+    public String getCache(String key) {
+        try {
+            return stringRedisTemplate.opsForValue().get(key);
+        } catch (Exception e) {
+            logger.error("", e);
+            return null;
+        }
+    }
 
-	@Override
-	public <V, K> String getCache(K key, Closure<V, K> closure, long timeout, TimeUnit timeUnit) {
-		return doGetCache(key, closure, timeout, timeUnit);
-	}
+    @Override
+    public void deleteCache(String key) {
+        stringRedisTemplate.delete(key);
+    }
 
-	private <K, V> String doGetCache(K key, Closure<V, K> closure, long timeout, TimeUnit timeUnit) {
-		String ret = getCache(key.toString());
-		if (ret == null) {
-			Object r = closure.execute(key);
-			setCache(key.toString(), r.toString(), timeout, timeUnit);
-			return r.toString();
-		}
-		return ret;
-	}
+    @Override
+    public <V, K> String getCache(K key, Closure<V, K> closure) {
+        return doGetCache(key, closure, this.timeout, this.timeUnit);
+    }
+
+    @Override
+    public <V, K> String getCache(K key, Closure<V, K> closure, long timeout, TimeUnit timeUnit) {
+        return doGetCache(key, closure, timeout, timeUnit);
+    }
+
+    private <K, V> String doGetCache(K key, Closure<V, K> closure, long timeout, TimeUnit timeUnit) {
+        String ret = getCache(key.toString());
+        if (ret == null) {
+            Object r = closure.execute(key);
+            setCache(key.toString(), r.toString(), timeout, timeUnit);
+            return r.toString();
+        }
+        return ret;
+    }
 
 }

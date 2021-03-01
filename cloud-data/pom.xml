@@ -17,7 +17,19 @@
         <java.version>1.8</java.version>
         <spring-cloud.version>Hoxton.SR7</spring-cloud.version>
     </properties>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
+        <!-- jdbc orm -->
+        <dependency>
+            <groupId>com.github.yinjihuan</groupId>
+            <artifactId>smjdbctemplate</artifactId>
+            <version>1.1</version>
+        </dependency>
         <dependency>
             <groupId>pers.quan.cloud</groupId>
             <artifactId>cloud-common</artifactId>
