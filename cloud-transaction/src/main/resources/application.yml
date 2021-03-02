@@ -1,0 +1,68 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: cloud-transaction
+  redis:
+    url: 120.76.175.67
+    database: 0
+    port: 6379
+#  spring.activemq.broker-url=tcp://localhost:61616
+#  spring.activemq.user=
+#  spring.activemq.password=
+#  spring.activemq.in-memory=true
+#  spring.activemq.pooled=false
+  #配置消息模型为发布订阅模式(一个项目中支持一种模式)
+  #spring.jms.pub-sub-domain=true
+
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost:3306/cas?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+      username: root
+      password: ENC(h0FuKCIDDxtJDagwvCWZPg==)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # 初始化大小，最小，最大
+      initialSize: 10
+      minIdle: 0
+      maxActive: 50
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      # 定期把监控数据输出到日志中
+      timeBetweenLogStatsMillis: 300000
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=1000
+
+eureka:
+  client:
+    # 开启健康检查需要依赖spring-boot-starter-actuator
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://root:root@localhost:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: false
+    # 等待下一次心跳的超时时间,若在这个时间内没有收到心跳,则移除该instance
+    lease-expiration-duration-in-seconds: 5
+    # 发送心跳的频率
+    lease-renewal-interval-in-seconds: 5
+
+jasypt:
+  encryptor:
+    password: jasypt
+    # 加密算法设置 3.0.0 以后
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
