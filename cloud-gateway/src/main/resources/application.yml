@@ -6,6 +6,18 @@ spring:
     name: cloud-gateway
   cloud:
     gateway:
+      # 配置全局CORS
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allowedOrigins: "https://docs.spring.io"
+#            allowedMethods:
+#              - GET
+      httpclient:
+        # 连接超时
+        connect-timeout: 1000
+        # 响应超时
+        response-timeout: 5s
       discovery:
         # 开启服务转发操作 格式:"http://网关地址/服务名称(大写)/**"
         locator:
@@ -17,6 +29,187 @@ spring:
           uri: lb://cloud-service
           predicates:
             - Path=/service/**
+        - id: after_route
+            uri: https://example.org
+            predicates:
+              # 在此时间后进行路由
+              - After=2017-01-20T17:42:47.789-07:00[America/Denver]
+              # 在此时间之前进行路由
+              - Before=2017-01-20T17:42:47.789-07:00[America/Denver]
+              # 在此时间内进行路由
+              - Between=2017-01-20T17:42:47.789-07:00[America/Denver], 2017-01-21T17:42:47.789-07:00[America/Denver]
+        - id: cookie_route
+            uri: https://example.org
+            predicates:
+              # 路由匹配正则表达式【ch.p】由chocolate指定
+              - Cookie=chocolate, ch.p
+              # 设置Cookie键值对【,】隔开
+              - Cookie=mycookie,mycookievalue
+        - id: header_route
+            uri: https://example.org
+            predicates:
+              # X-Request-Id与【\d+】正则表达式模式匹配
+              - Header=X-Request-Id, \d+ # 一个或多个数字
+        - id: host_route
+            uri: https://example.org
+            predicates:
+              # 匹配ant风格模式的Host，同样支持URI模板【{uri}.myhost.org】
+              - Host=**.somehost.org,**.anotherhost.org
+        - id: method_route
+            uri: https://example.org
+            predicates:
+              # 匹配方法为POST和GET的请求
+              - Method=GET,POST
+        - id: path_route
+            uri: https://example.org
+            predicates:
+              # PathMatcher and matchTrailingSlash defaults to true
+              - Path=/red/{segment},/blue/{segment}
+        - id: query_route
+            uri: https://example.org
+            predicates:
+              # 请求参数中包含green时匹配
+              - Query=green
+              # 请求参数包含red和【green.】正则表达式时匹配
+              - Query=red, gree.
+        - id: remoteaddr_route
+            uri: https://example.org
+            predicates:
+              # 192.168.1.1 为IP地址, 24为子网掩码（即192.168.1.0为子网掩码，列如：192.168.1.10匹配）
+              - RemoteAddr=192.168.1.1/24
+        - id: weight_high
+            uri: https://weighthigh.org
+            predicates:
+              - Weight=group1, 8 # 80%的流量转发到weighthigh.org
+        - id: weight_low
+            uri: https://weightlow.org
+            predicates:
+              - Weight=group1, 2 # 20%的流量转发到weightlow.org
+        - id: add_request_header_route
+            uri: https://example.org
+            predicates:
+              - Path=/red/{segment}
+            filters:
+              # 为请求的头添加X-Request-red=blue，由 AddRequestHeaderGatewayFilterFactory处理
+              - AddRequestHeader=X-Request-red, blue
+              # 可接受一个URI模板{segment}
+              - AddRequestHeader=X-Request-Red, Blue-{segment}
+        - id: add_request_parameter_route
+            uri: https://example.org
+            predicates:
+              - Host: {segment}.myhost.org
+            filters:
+              # 为请求的参数添加red=blue，AddRequestParameterGatewayFilterFactory处理
+              - AddRequestParameter=red, blue
+              # 可接受一个URI模板{segment}
+              - AddRequestParameter=foo, bar-{segment}
+        - id: add_response_header_route
+            uri: https://example.org
+            predicates:
+              - Host: {segment}.myhost.org
+            filters:
+              # 为响应的参数添加X-Response-Red=blue，AddResponseHeaderGatewayFilterFactory处理
+              - AddResponseHeader=X-Response-Red, Blue
+              # 可接受一个URI模板{segment}
+              - AddResponseHeader=foo, bar-{segment}
+        - id: dedupe_response_header_route
+            uri: https://example.org
+            filters:
+              # 当网关CORS逻辑和下游逻辑都添加了Access-Control-Allow-Credentials和Access-Control-Allow-Origin时，这将删除重复值
+              # 此配置由DedupeResponseHeaderGatewayFilterFactory处理
+              # name多个值【空格】分离,可接受一个策略参数【,】隔开,接受的值为RETAIN_FIRST(默认),RETAIN_LAST,RETAIN_UNIQUE
+              - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - id: map_request_header_route
+            uri: https://example.org
+            filters:
+              # 添加X-Request-Red:<values>到Header中,由MapRequestHeaderGatewayFilterFactory处理
+              - MapRequestHeader=Blue, X-Request-Red
+        - id: prefixpath_route
+            uri: https://example.org
+            filters:
+              # 为所有请求添加前缀mypath，例如/hello -> /mypath/hello, 由PrefixPathGatewayFilterFactory处理
+              - PrefixPath=/mypath
+        - id: removerequestheader_route
+            uri: https://example.org
+            filters:
+              # 要删除的请求头里的参数X-Request-Foo,由RemoveRequestHeaderGatewayFilterFactory处理
+              - RemoveRequestHeader=X-Request-Foo
+              # 要删除的请求的参数red,由RemoveRequestParameterGatewayFilterFactory处理
+              - RemoveRequestParameter=red
+        - id: rewritepath_route
+            uri: https://example.org
+            predicates:
+              - Path=/red/**
+            filters:
+              # 由RewritePathGatewayFilterFactory处理
+              - RewritePath=/red/?(?<segment>.*), /$\{segment}
+        - id: rewritelocationresponseheader_route
+            uri: http://example.org
+            filters:
+              # stripVersionMode, locationHeaderName, hostValue, and protocolsRegex 四个参数
+              # 1.stripVersionMode：
+              #  - NEVER_STRIP:版本不会被剥离，即使原路径不包含版本
+              #  - AS_IN_REQUEST(默认)：只有原路径包含版本时才会被剥离
+              #  - ALWAYS_STRIP：无论包不包含都会剥离
+              # 3.hostValue: 如果提供了则用于替换响应Location标头的host:port部分,如果没有提供则使用Host请求头的值
+              # 4.protocolsRegex： 默认为【http|https|ftp|ftps】
+              - RewriteLocationResponseHeader=AS_IN_REQUEST, Location, ,
+        - id: rewriteresponseheader_route
+            uri: https://example.org
+            filters:
+              # header值：/42?user=ford&password=omg!what&flag=true,设置为：/42?user=ford&password=***&flag=true
+              - RewriteResponseHeader=X-Response-Red, , password=[^&]+, password=***
+        - id: save_session
+            uri: https://example.org
+            predicates:
+              - Path=/foo/**
+            filters:
+              # 强制执行一个WebSession的save操作，例如使用Spring Session之类的东西来存储惰性数据时特别有用
+              - SaveSession
+        - id: setpath_route
+            uri: https://example.org
+            predicates:
+              - Path=/red/{segment}
+            filters:
+              # 对于/rea/blue请求，将设置为/blue
+              - SetPath=/{segment}
+        - id: setrequestheader_route
+            uri: https://example.org
+            predicates:
+              - Host: {segment}.myhost.org
+            filters:
+              # 将请求中X-Request-Red:1234修改为：X-Request-Red:Blue
+              - SetRequestHeader=X-Request-Red, Blue
+              - SetRequestHeader=foo, bar-{segment}
+        - id: setresponseheader_route
+            uri: https://example.org
+            predicates:
+              - Host: {segment}.myhost.org
+            filters:
+              # 将请求中X-Response-Red:1234修改为：X-Response-Red:Blue
+              - SetResponseHeader=X-Response-Red, Blue
+              - SetResponseHeader=foo, bar-{segment}
+        - id: per_route_timeouts
+            uri: https://example.org
+            predicates:
+              - name: Path
+                args:
+                  pattern: /delay/{timeout}
+            metadata:
+              # 配置每条路由的超时
+              response-timeout: 200
+              connect-timeout: 200
+
+
+# 提供网关监视功能
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway
 
 eureka:
   client:

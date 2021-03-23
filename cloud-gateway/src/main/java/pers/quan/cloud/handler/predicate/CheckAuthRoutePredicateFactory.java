@@ -17,10 +17,7 @@ public class CheckAuthRoutePredicateFactory extends AbstractRoutePredicateFactor
 	public Predicate<ServerWebExchange> apply(Config config) {
 		return exchange -> {
 			System.err.println("进入了CheckAuthRoutePredicateFactory\t" + config.getName());
-			if (config.getName().equals("yinjihuan")) {
-				return true;
-			}
-			return false;
+			return "yinjihuan".equals(config.getName());
 		};
 	}
 
